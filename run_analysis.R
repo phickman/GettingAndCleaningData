@@ -1,16 +1,12 @@
-#library(data.table)
-#library(dplyr)
-
-##setwd("c:/Users/phickma/Desktop/GitHub/GettingAndCleaningData")
+# Getting and Cleaning Data Course Project
+#  The goal is to prepare tidy data that can be used for later analysis.
 
 # 1. Merge the training and the test sets to create one data set.
-
-# get the training data
+# get the training and test data
 trainSubjects <- read.table("../UCI HAR Dataset/train/subject_train.txt")
 trainSet <- read.table("../UCI HAR Dataset/train/X_train.txt")
 trainLabels <- read.table("../UCI HAR Dataset/train/y_train.txt")
 
-# get the test data
 testSubjects <- read.table("../UCI HAR Dataset/test/subject_test.txt")
 testSet <- read.table("../UCI HAR Dataset/test/X_test.txt")
 testLabels <- read.table("../UCI HAR Dataset/test/y_test.txt")
@@ -20,25 +16,23 @@ allSubjects <- rbind(trainSubjects, testSubjects)
 allSets <- rbind(trainSet, testSet)
 allLabels <- rbind(trainLabels, testLabels)
 
-# add useful column names...
-
+# add useful column names
 # a) before merging all the data together, rename subject and label column names (same as others - V1)
 # * subject identifies the subject who performed the activity (1 to 30)
 # * label identifies the activity performed
 colnames(allSubjects) <- "Subject"
 colnames(allLabels) <- "Activity"
-
 # b) allsets contains 561 columns that correlates with features.txt
 allFeatures <- read.table("../UCI HAR Dataset/features.txt")
 # assign the column names to the features listed in features.txt (descriptive names now)
 colnames(allSets) <- allFeatures$V2
 
-# now merge all the data together, this is a column merge as it should all correlate
+# now merge all the data together, this is a column merge as the rows should all correlate
 allData <- cbind(allSubjects, allLabels, allSets)
 
-# 2. Extracts only the measurements on the mean and standard deviation for each measurement.
 
-# need to identify the columns with "std" and "mean" in the name (from features.txt or colnames)
+# 2. Extracts only the measurements on the mean and standard deviation for each measurement.
+# need to identify the columns with "std()" and "mean()" in the name (from features.txt - skipping meanFreq())
 # should be able to use: select(allFeatures,contains("std")), but it doesn't like the column names that are very similar
 #  http://stackoverflow.com/questions/25923392/select-columns-based-on-string-match-dplyrselect
 subData <- allData[,grepl("Subject|Activity|mean\\(\\)|std\\(\\)", colnames(allData))]
@@ -53,7 +47,7 @@ subData$Activity <- allActivities[subData$Activity, 2]
 # 4. Appropriately labels the data set with descriptive variable names.
 # activity names are stored in activity_labels.txt
 # replace current value in subData$Activity with corresponding activity in activty_labels.txt
-# I have chosed to explicitly set the variable names, I could have used grep
+# I have chosen to explicitly set the variable names, I could have used grep
 colnames(subData) <- list(
   "Subject",
   "Activity",
