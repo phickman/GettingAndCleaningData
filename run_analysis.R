@@ -1,15 +1,17 @@
 # Getting and Cleaning Data Course Project
 #  The goal is to prepare tidy data that can be used for later analysis.
 
+# This file must be in your working directory with the "UCI HAR Dataset" folder as a sub directory
+
 # 1. Merge the training and the test sets to create one data set.
 # get the training and test data
-trainSubjects <- read.table("../UCI HAR Dataset/train/subject_train.txt")
-trainSet <- read.table("../UCI HAR Dataset/train/X_train.txt")
-trainLabels <- read.table("../UCI HAR Dataset/train/y_train.txt")
+trainSubjects <- read.table("./UCI HAR Dataset/train/subject_train.txt")
+trainSet <- read.table("./UCI HAR Dataset/train/X_train.txt")
+trainLabels <- read.table("./UCI HAR Dataset/train/y_train.txt")
 
-testSubjects <- read.table("../UCI HAR Dataset/test/subject_test.txt")
-testSet <- read.table("../UCI HAR Dataset/test/X_test.txt")
-testLabels <- read.table("../UCI HAR Dataset/test/y_test.txt")
+testSubjects <- read.table("./UCI HAR Dataset/test/subject_test.txt")
+testSet <- read.table("./UCI HAR Dataset/test/X_test.txt")
+testLabels <- read.table("./UCI HAR Dataset/test/y_test.txt")
 
 # bind the training and test data together
 allSubjects <- rbind(trainSubjects, testSubjects)
@@ -122,7 +124,8 @@ colnames(subData) <- list(
 
 # 5. From the data set in step 4, creates a second, independent tidy data set with the 
 #    average of each variable for each activity and each subject.
-tidyData <- aggregate(. ~ Activity+Subject,data = subData, FUN=mean)
+tidyData <- aggregate(. ~ Subject+Activity,data = subData, FUN=mean)
+tidyData <- tidyData[order(tidyData$Subject,tidyData$Activity),]
 
 # create a file to upload to Coursera
 write.table(tidyData, file = "tidyData.txt",row.names=FALSE)
