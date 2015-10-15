@@ -19,6 +19,6 @@ The script performs the following steps:
 
 # The variables
 There are 68 variables in the exported dataset.
-* Subject is a unique ID
-* Activity describes what the subject was performing (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING)
-* The remaining are the mean and standard deviation for measurements relating to time, frequency, accelerometer and gyroscope readings
+* Subject is a unique numeric ID
+* Activity describes what the subject was performing, it will be WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, or LAYING
+* The remaining are the activity mean for measurements from the time and frequency domain relating to accelerometer and gyroscope readings
