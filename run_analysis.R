@@ -41,18 +41,20 @@ allData <- cbind(allSubjects, allLabels, allSets)
 # need to identify the columns with "std" and "mean" in the name (from features.txt or colnames)
 # should be able to use: select(allFeatures,contains("std")), but it doesn't like the column names that are very similar
 #  http://stackoverflow.com/questions/25923392/select-columns-based-on-string-match-dplyrselect
-step2Data <- allData[,grepl("Subject|Activity|mean\\(\\)|std\\(\\)", colnames(allData))]
+subData <- allData[,grepl("Subject|Activity|mean\\(\\)|std\\(\\)", colnames(allData))]
 
 
 # 3. Uses descriptive activity names to name the activities in the data set
 allActivities <- read.table("../UCI HAR Dataset/activity_labels.txt")
 # copy the associated Activity Name from allActivities to the data set (second column is Activity)
-step2Data$Activity <- allActivities[step2Data$Activity, 2]
+subData$Activity <- allActivities[subData$Activity, 2]
 
 
 # 4. Appropriately labels the data set with descriptive variable names.
+# activity names are stored in activity_labels.txt
+# replace current value in subData$Activity with corresponding activity in activty_labels.txt
 # I have chosed to explicitly set the variable names, I could have used grep
-colnames(step2Data) <- list(
+colnames(subData) <- list(
   "Subject",
   "Activity",
   "timeBodyAccelerometer_Mean_X",
@@ -124,6 +126,9 @@ colnames(step2Data) <- list(
 )
 
 
-# 5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
+# 5. From the data set in step 4, creates a second, independent tidy data set with the 
+#    average of each variable for each activity and each subject.
+tidyData <- aggregate(. ~ Activity+Subject,data = subData, FUN=mean)
 
-
+# create a file to upload to Coursera
+write.table(tidyData, file = "tidyData.txt",row.names=FALSE)
